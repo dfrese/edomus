@@ -1,4 +1,4 @@
-(ns edomus.impl.chilren)
+(ns edomus.impl.children)
 
 (defn append-child [base node]
   (if (vector? base)

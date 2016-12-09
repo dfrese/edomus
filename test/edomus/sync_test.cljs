@@ -1,9 +1,9 @@
 (ns edomus.sync-test
   (:require [cljs.test :refer-macros [deftest is testing]]
-            [edomus.sync :as sync]
-            [edomus.test-commands :as tc]))
+            [edomus.test-commands :as tc]
+            [edomus.sync :as sync]))
 
-(def exec! (tc/exec-with! sync/sync-command-config))
+(def exec! sync/execute)
 
 (deftest sync-create-test
   (tc/create-test exec!))

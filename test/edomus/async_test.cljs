@@ -1,17 +1,13 @@
 (ns edomus.async-test
   (:require [cljs.test :refer-macros [deftest is testing async]]
             [edomus.async :as async]
-            [edomus.impl.batch :as batch]
-            [edomus.test-commands :as tc]
-            [active.clojure.monad :as monad :include-macros true]))
+            [edomus.test-commands :as tc]))
 
-(def exec!
-  (let [e1 (tc/exec-with! async/async-command-config)]
-    (fn [cmd]
-      ;; run monad, synchronously flushing batch at end - easier to test for now.
-      (e1 (monad/monadic
-           cmd
-           (async/flush!))))))
+(defn exec! [f & args]
+  (async/execute (fn []
+                   (apply f args)
+                   ;; synchronously flushing batch at end - easier to test for now.
+                   (async/flush!))))
 
 (deftest async-create-test
   (tc/create-test exec!))

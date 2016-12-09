@@ -1,9 +1,17 @@
 (ns edomus.core
   (:require [edomus.impl.commands :as c :include-macros true]))
 
+(c/defcmd document [])
 (c/defcmd create-element [document type & [options]])
 (c/defcmd create-element-ns [document ns name & [options]])
-(c/defcmd create-text-node [document text])
+(c/defcmd element? [v])
+(c/defcmd element-name [e])
+(c/defcmd element-namespace [e])
+(c/defcmd element-owner-document [e])
+(c/defcmd create-text-node [document value])
+(c/defcmd text-node? [v])
+(c/defcmd text-node-value [v])
+(c/defcmd set-text-node-value! [v])
 
 (c/defcmd has-property? [element name])
 (c/defcmd get-property [element name])

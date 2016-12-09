@@ -1,104 +1,121 @@
 (ns edomus.sync
-  (:require [edomus.impl.commands :as cmd]
-            [edomus.impl.create :as create]
+  (:require [edomus.impl.create :as create]
             [edomus.impl.style :as style]
             [edomus.impl.attributes :as attributes]
             [edomus.core :as core]
             [active.clojure.monad :as monad]))
 
-(defn execute [cmd]
-  (cmd/case-cmd
-   cmd
-   ;; Creation
+(defn ^:no-doc element? [v]
+  (instance? js/Element v))
+
+(defn ^:no-doc element-name [e]
+  (.-nodeName e))
+
+(defn ^:no-doc element-namespace [e]
+  (.-namespaceURI e))
+
+(defn ^:no-doc text-node? [v]
+  (instance? js/Text v))
+
+(defn ^:no-doc text-node-value [n]
+  (.-nodeValue n))
+
+(defn ^:no-doc set-text-node-value! [n value]
+  (set! (.-nodeValue n) value))
+
+(defn- has-property? [element k]
+  (create/js-contains? element (name k)))
+
+(defn- get-property [element k]
+  (aget element (name k)))
+
+(defn- set-property! [element k v]
+  (aset element (name k) v))
+
+(defn- remove-property! [element k]
+  (js-delete element (name k)))
+
+(defn- set-attribute! [element k v]
+  (do (attributes/set-attribute element k v)
+      nil))
+
+(defn remove-attribute! [element k]
+  (do (attributes/remove-attribute element k)
+      nil))
    
-   (core/create-element document type & [options])
-   (create/element document type options)
+(defn get-style [element name]
+  (style/get-style (.-style element) name))
 
-   (core/create-element-ns document ns name & [options])
-   (create/element-ns document ns name options)
+(defn set-style! [element name value]
+  (style/set-style! (.-style element) name value))
 
-   (core/create-text-node document text)
-   (create/text-node document text)
+(defn remove-style! [element name]
+  (style/remove-style! (.-style element) name))
 
-   ;; Properties
-
-   (core/has-property? element k)
-   (create/js-contains? element (name k))
-
-   (core/get-property element k)
-   (aget element (name k))
-
-   (core/set-property! element k v)
-   (aset element (name k) v)
-
-   (core/remove-property! element k)
-   (js-delete element (name k))
-
-   ;; Attributes
-   
-   (core/has-attribute? element k)
-   (attributes/has-attribute? element k)
-
-   (core/get-attribute element k)
-   (attributes/get-attribute element k)
-
-   (core/set-attribute! element k v)
-   (do (attributes/set-attribute element k v)
-       nil)
-
-   (core/remove-attribute! element k)
-   (do (attributes/remove-attribute element k)
-       nil)
-
-   ;; Style
-
-   (core/get-style element name)
-   (style/get-style (.-style element) name)
-
-   (core/set-style! element name value)
-   (style/set-style! (.-style element) name value)
-
-   (core/remove-style! element name)
-   (style/remove-style! element name)
-
-   ;; Children
-   
-   (core/child-nodes element)
-   (vec (array-seq (.-childNodes element)))
+(defn child-nodes [element]
+  (vec (array-seq (.-childNodes element))))
     
-   (core/append-child! element node)
-   (.appendChild element node)
+(defn append-child! [element node]
+  (.appendChild element node))
     
-   (core/remove-child! element node)
-   (.removeChild element node)
+(defn remove-child! [element node]
+  (.removeChild element node))
     
-   (core/insert-before! element node ref)
-   (.insertBefore element node ref)
+(defn insert-before! [element node ref]
+  (.insertBefore element node ref))
     
-   (core/replace-child! element node old-node)
-   (.replaceChild element node old-node)
+(defn replace-child! [element node old-node]
+  (.replaceChild element node old-node))
 
-   ;; Classes
-   (core/classes element)
-   (set (array-seq (.-classList element)))
+(defn classes [element]
+  (set (array-seq (.-classList element))))
    
-   (core/contains-class? element name)
-   (.contains (.-classList element) name)
+(defn contains-class? [element name]
+  (.contains (.-classList element) name))
 
-   (core/add-class! element name)
-   (.add (.-classList element) name)
+(defn add-class! [element name]
+  (.add (.-classList element) name))
    
-   (core/remove-class! element name)
-   (.remove (.-classList element) name)
+(defn remove-class! [element name]
+  (.remove (.-classList element) name))
    
-   (core/toggle-class! element name)
-   (.toggle (.-classList element) name)
+(defn toggle-class! [element name]
+  (.toggle (.-classList element) name))
 
-   monad/unknown-command))
+(defn global-document []
+  js/document)
 
-(def sync-command-config
-  (monad/make-monad-command-config
-   (fn [run-any env state cmd]
-     [(execute cmd) state])
-   {}
-   {}))
+(defn execute [f & args]
+  (binding [core/document global-document
+            core/element-owner-document #(.-ownerDocument %)
+            core/create-element create/element
+            core/create-element-ns create/element-ns
+            core/element? element?
+            core/element-name element-name
+            core/element-namespace element-namespace
+            core/create-text-node create/text-node
+            core/text-node? text-node?
+            core/text-node-value text-node-value
+            core/set-text-node-value! set-text-node-value!
+            core/has-property? has-property?
+            core/get-property get-property
+            core/set-property! set-property!
+            core/remove-property! remove-property!
+            core/has-attribute? attributes/has-attribute?
+            core/get-attribute attributes/get-attribute
+            core/set-attribute! set-attribute!
+            core/remove-attribute! remove-attribute!
+            core/get-style get-style
+            core/set-style! set-style!
+            core/remove-style! remove-style!
+            core/child-nodes child-nodes
+            core/append-child! append-child!
+            core/remove-child! remove-child!
+            core/insert-before! insert-before!
+            core/replace-child! replace-child!
+            core/classes classes
+            core/contains-class? contains-class?
+            core/add-class! add-class!
+            core/remove-class! remove-class!
+            core/toggle-class! toggle-class!]
+    (apply f args)))

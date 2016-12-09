@@ -1,6 +1,6 @@
 (ns edomus.impl.batch
   (:require [edomus.impl.style :as style]
-            [edomus.impl.chilren :as children]
+            [edomus.impl.children :as children]
             [edomus.impl.attributes :as attributes]))
 
 (def empty-batch {})
@@ -132,6 +132,7 @@
   (reduce-kv apply-property! element updates))
 
 (defn apply-batch! [batch]
+  ;; TODO: any reasonably good order to apply the props?
   (reduce-kv #(apply-properties! %2 %3)
              nil
              batch))
