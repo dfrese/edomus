@@ -21,11 +21,11 @@
 
 (defn- update-data!
   ([element f]
-   (core/property-set! element property-name
-                       (f (core/property-get element property-name))))
+   (core/set-property! element property-name
+                       (f (core/get-property element property-name))))
   ([element f a0 a1]
-   (core/property-set! element property-name
-                       (f (core/property-get element property-name) a0 a1))))
+   (core/set-property! element property-name
+                       (f (core/get-property element property-name) a0 a1))))
 
 (defn unset-event-handler!
   "Remove the singleton event listener for an event type and element."
