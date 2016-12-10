@@ -39,54 +39,54 @@
   (do (attributes/set-attribute element k v)
       nil))
 
-(defn remove-attribute! [element k]
+(defn- remove-attribute! [element k]
   (do (attributes/remove-attribute element k)
       nil))
    
-(defn get-style [element name]
+(defn- get-style [element name]
   (style/get-style (.-style element) name))
 
-(defn set-style! [element name value]
+(defn- set-style! [element name value]
   (style/set-style! (.-style element) name value))
 
-(defn remove-style! [element name]
+(defn- remove-style! [element name]
   (style/remove-style! (.-style element) name))
 
-(defn child-nodes [element]
+(defn- child-nodes [element]
   (vec (array-seq (.-childNodes element))))
     
-(defn append-child! [element node]
+(defn- append-child! [element node]
   (.appendChild element node))
     
-(defn remove-child! [element node]
+(defn- remove-child! [element node]
   (.removeChild element node))
     
-(defn insert-before! [element node ref]
+(defn- insert-before! [element node ref]
   (.insertBefore element node ref))
     
-(defn replace-child! [element node old-node]
+(defn- replace-child! [element node old-node]
   (.replaceChild element node old-node))
 
-(defn classes [element]
+(defn- classes [element]
   (set (array-seq (.-classList element))))
    
-(defn contains-class? [element name]
+(defn- contains-class? [element name]
   (.contains (.-classList element) name))
 
-(defn add-class! [element name]
+(defn- add-class! [element name]
   (.add (.-classList element) name))
    
-(defn remove-class! [element name]
+(defn- remove-class! [element name]
   (.remove (.-classList element) name))
    
-(defn toggle-class! [element name]
+(defn- toggle-class! [element name]
   (.toggle (.-classList element) name))
 
-(defn global-document []
+(defn- global-document []
   js/document)
 
 (defn execute [f & args]
-  (binding [core/document global-document
+  (binding [core/document js/document
             core/element-owner-document #(.-ownerDocument %)
             core/create-element create/element
             core/create-element-ns create/element-ns

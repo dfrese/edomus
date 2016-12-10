@@ -5,26 +5,26 @@
 
 (defn create-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")]
+           (let [e1 (core/create-element core/document "div")]
              (is (core/element? e1))
              (is (= "DIV" (core/element-name e1))))
 
-           (let [e1 (core/create-element (core/document) "span")]
+           (let [e1 (core/create-element core/document "span")]
              (is (core/element? e1))
              (is (= "SPAN" (core/element-name e1))))
           
-           (let [e2 (core/create-element-ns (core/document) "myns" "div")]
+           (let [e2 (core/create-element-ns core/document "myns" "div")]
              (is (core/element? e2))
              (is (= "div" (core/element-name e2)))
              (is (= "myns" (core/element-namespace e2))))
 
-           (let [e3 (core/create-text-node (core/document) "Hello World")]
+           (let [e3 (core/create-text-node core/document "Hello World")]
              (is (core/text-node? e3))
              (is (= "Hello World" (core/text-node-value e3)))))))
 
 (defn property-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")
+           (let [e1 (core/create-element core/document "div")
                  i1 (core/get-property e1 "tabIndex")]
 
              (is (some? i1))
@@ -46,7 +46,7 @@
 
 (defn attribute-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")]
+           (let [e1 (core/create-element core/document "div")]
 
              (is (not (core/has-attribute? e1 "foo-bar")))
              (is (= nil (core/get-attribute e1 "foo-bar")))
@@ -62,7 +62,7 @@
 
 (defn style-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")]
+           (let [e1 (core/create-element core/document "div")]
 
              (let [v0 (core/get-style e1 "padding-left")]
                ;; Note: if nil or "" seems to be browser dependant
@@ -85,10 +85,10 @@
 
 (defn children-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")
-                 e2 (core/create-element (core/document) "span")
-                 e3 (core/create-element (core/document) "span")
-                 e4 (core/create-element (core/document) "span")]
+           (let [e1 (core/create-element core/document "div")
+                 e2 (core/create-element core/document "span")
+                 e3 (core/create-element core/document "span")
+                 e4 (core/create-element core/document "span")]
 
              (is (empty? (core/child-nodes e1)))
 
@@ -109,7 +109,7 @@
 
 (defn classes-test [exec!]
   (exec! (fn []
-           (let [e1 (core/create-element (core/document) "div")]
+           (let [e1 (core/create-element core/document "div")]
 
              (is (empty? (core/classes e1)))
 

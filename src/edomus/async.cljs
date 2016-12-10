@@ -136,7 +136,7 @@
 
 ;; Global batch
 
-(defonce current-batch (atom batch/empty-batch))
+(defonce ^:private current-batch (atom batch/empty-batch))
 
 (defn- commit-current-batch! []
   (let [b @current-batch]
@@ -148,7 +148,7 @@
     (binding [flush! (state-m batch do-flush!)
               ;; TODO: post-commit-hook
               ;; TODO: focus?
-              core/document sync/global-document
+              core/document js/document
               core/element-owner-document #(.-ownerDocument %)
               core/create-element create/element
               core/create-element-ns create/element-ns

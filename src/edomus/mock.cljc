@@ -19,7 +19,7 @@
                             (str "Expected " expected ", but was " actual ".")))
                   (reset! rem (rest @rem))
                   (:result n))))]
-      (binding [core/document (m core/document)
+      (binding [core/document nil
                 core/element-owner-document (m core/element-owner-document)
                 core/create-element (m core/create-element)
                 core/create-element-ns (m core/create-element-ns)

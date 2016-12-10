@@ -14,17 +14,17 @@
 ;; (cmd/defcmd to-html [element])
 (cmd/defcmd to-hiccup [element])
 
-(def default-element-props {"attributes" {}
-                            "className" ""
-                            "classList" #{}
-                            "style" (array-map)
-                            "childNodes" []
-                            "accessKey" ""
-                            "tabIndex" -1
-                            "dir" ""
-                            "id" ""
-                            "lang" ""
-                            "title" ""})
+(def ^:private default-element-props {"attributes" {}
+                                      "className" ""
+                                      "classList" #{}
+                                      "style" (array-map)
+                                      "childNodes" []
+                                      "accessKey" ""
+                                      "tabIndex" -1
+                                      "dir" ""
+                                      "id" ""
+                                      "lang" ""
+                                      "title" ""})
 
 (defn- parse-class [s]
   (map string/trim (string/split s #"\s+")))
@@ -35,7 +35,7 @@
 (defn- make-style [m]
   (apply str (interpose "; " (map (fn [[k v]]
                                     (str (name k) ": " v))
-                                  m))))
+                                  (remove #(empty? (second %)) m)))))
 
 (defn- compile-to-hiccup [elements element]
 
@@ -72,18 +72,12 @@
     (instance? Text element)
     (get elements element)))
 
-(def empty-state {})
-
-;; TODO: unify this within in core
-#?(:cljs (def undefined js/undefined))
-#?(:clj (def undefined nil))
-
-(def html-ns "http://www.w3.org/1999/xhtml")
+(def ^:private empty-state {})
 
 (defn- create-element-ns [elements document ns name & [options]]
   (assert name)
   (let [e (Element. ns
-                    (if (= ns html-ns) ;; TODO: also svg and math?
+                    (if (= ns core/html-ns) ;; TODO: also svg and math?
                       (string/upper-case name)
                       name)
                     (:is options))]
@@ -101,13 +95,13 @@
          (state-m (fn [elements element]
                     [(compile-to-hiccup elements element) elements]))
 
-         core/document (constantly nil)
+         core/document nil
          core/element-owner-document (constantly nil)
 
          ;; Creation
          core/create-element
          (state-m (fn [elements document type & [options]]
-                    (create-element-ns elements document html-ns type options)))
+                    (create-element-ns elements document core/html-ns type options)))
 
          core/create-element-ns
          (state-m create-element-ns)
@@ -145,12 +139,12 @@
 
          core/has-property?
          (state-m (fn [elements element k]
-                    [(not= undefined (get-in elements [element (name k)] undefined))
+                    [(not= core/undefined (get-in elements [element (name k)] core/undefined))
                      elements]))
    
          core/get-property
          (state-m (fn [elements element k]
-                    [(get-in elements [element (name k)] undefined) elements]))
+                    [(get-in elements [element (name k)] core/undefined) elements]))
    
          core/set-property!
          (state-m (fn [elements element k v]
@@ -164,12 +158,12 @@
 
          core/has-attribute?
          (state-m (fn [elements element k]
-                    [(not= undefined (get-in elements [element "attributes" (name k)] undefined))
+                    [(some? (get-in elements [element "attributes" (name k)] nil))
                      elements]))
 
          core/get-attribute
          (state-m (fn [elements element k]
-                    [(get-in elements [element "attributes" (name k)] undefined) elements]))
+                    [(get-in elements [element "attributes" (name k)] nil) elements]))
 
          core/set-attribute!
          (state-m (fn [elements element k v]
@@ -183,7 +177,7 @@
 
          core/get-style
          (state-m (fn [elements element k]
-                    [(get-in elements [element "style" (name k)]) elements]))
+                    [(get-in elements [element "style" (name k)] "") elements]))
 
          core/set-style!
          (state-m (fn [elements element k v]
@@ -191,7 +185,7 @@
                                     assoc (name k) v)]))
 
          core/remove-style!
-         (state-m (fn [elements element k] ;; dissoc would be wrong...
+         (state-m (fn [elements element k] ;; dissoc would be wrong...   TODO: why?
                     [nil (update-in elements [element "style"] assoc (name k) "")]))
 
          ;; Children
@@ -208,6 +202,7 @@
 
          core/remove-child!
          (state-m (fn [elements element node]
+                    ;; TODO: throw if node is not a child
                     [nil (update-in elements [element "childNodes"]
                                     (fn [v] (vec (remove #(identical? node %) v))))]))
 
