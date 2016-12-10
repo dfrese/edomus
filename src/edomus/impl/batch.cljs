@@ -125,11 +125,11 @@
     "attributes" (do (apply-attributes element v) nil)
     "style" (apply-style! (.-style element) v)
     "childNodes" (do (apply-child-updates element v) nil)
-    "classList" (do (apply-class-updates! element v))
-    (aset element (name k) v)))
+    "classList" (do (apply-class-updates! element v) nil)
+    (do (aset element (name k) v) nil)))
 
 (defn apply-properties! [element updates]
-  (reduce-kv apply-property! element updates))
+  (reduce-kv #(apply-property! element %2 %3) nil updates))
 
 (defn apply-batch! [batch]
   ;; TODO: any reasonably good order to apply the props?
