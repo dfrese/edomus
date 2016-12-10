@@ -17,7 +17,7 @@
 (c/defcmd create-text-node [document value] "Create a text node in the given document and with the given content.")
 (c/defcmd text-node? [v] "Returns true for the text nodes returned by [[create-text-node]].")
 (c/defcmd text-node-value [v] "Returns the content of the given text node.")
-(c/defcmd set-text-node-value! [v] "Changes the content of the given text node.")
+(c/defcmd set-text-node-value! [node v] "Changes the content of the given text node.")
 
 #?(:cljs (def undefined js/undefined))
 #?(:clj (def undefined ::undefined))
