@@ -51,5 +51,7 @@
                 core/add-class! (m core/add-class!)
                 core/remove-class! (m core/remove-class!)
                 core/toggle-class! (m core/toggle-class!)
+                core/add-event-listener! (m core/add-event-listener!)
+                core/remove-event-listener! (m core/remove-event-listener!)
                 ]
         (apply f args)))))

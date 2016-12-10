@@ -250,6 +250,13 @@
          core/toggle-class!
          (state-m (fn [elements element name]
                     [nil (update-in elements [element "classList"] #(if (contains? % name) (disj % name) (conj % name)))]))
+
+         ;; hiccup does not support event handling
+         core/add-event-listener!
+         (fn [element type listener & [options]] nil)
+         
+         core/remove-event-listener!
+         (fn [element type listener & [options]] nil)
          ]
       (apply f args))))
 

@@ -179,7 +179,9 @@
               core/contains-class? (state-m batch contains-class?)
               core/add-class! (state-m batch add-class!)
               core/remove-class! (state-m batch remove-class!)
-              core/toggle-class! (state-m batch toggle-class!)]
+              core/toggle-class! (state-m batch toggle-class!)
+              core/add-event-listener! sync/sync-add-event-listener!
+            core/remove-event-listener! sync/sync-remove-event-listener!]
       (let [res (apply f args)]
         (aframe/request-frame! commit-current-batch!)
         res))))

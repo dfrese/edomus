@@ -82,8 +82,11 @@
 (defn- toggle-class! [element name]
   (.toggle (.-classList element) name))
 
-(defn- global-document []
-  js/document)
+(defn- sync-add-event-listener! [element type listener & [options]]
+  (.addEventListener element type listener (clj->js options)))
+
+(defn- sync-remove-event-listener! [element type listener & [options]]
+  (.removeEventListener element type listener (clj->js options)))
 
 (defn execute [f & args]
   (binding [core/document js/document
@@ -117,5 +120,7 @@
             core/contains-class? contains-class?
             core/add-class! add-class!
             core/remove-class! remove-class!
-            core/toggle-class! toggle-class!]
+            core/toggle-class! toggle-class!
+            core/add-event-listener! sync-add-event-listener!
+            core/remove-event-listener! sync-remove-event-listener!]
     (apply f args)))
