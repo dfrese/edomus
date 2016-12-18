@@ -79,7 +79,8 @@
                        (conj (or updates []) #(apply f % args)))))
 
 (defn apply-child-updates [base updates]
-  (reduce #(%2 %1)
+  (reduce (fn [base upd]
+            (upd base))
           base
           updates))
 

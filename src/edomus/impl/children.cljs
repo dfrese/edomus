@@ -26,6 +26,8 @@
   (if (vector? base)
     ;; if node is a child already, this is equiv to moving the child
     (let [pos (child-pos base ref-node)]
+      (when-not (< (child-pos base node) 0)
+        (new js/Error "The node to be inserted is a child of this node already."))
       (cond
         (< pos 0)
         (throw (new js/Error "The node before which the new node is to be inserted is not a child of this node."))
@@ -51,7 +53,7 @@
         (= pos 0)
         (subvec base 1)
         (= pos (dec (count base)))
-        (subvec base 0 (dec pos))
+        (subvec base 0 pos)
         :else
         (vec (concat (subvec base 0 pos)
                      (subvec base (inc pos))))))
