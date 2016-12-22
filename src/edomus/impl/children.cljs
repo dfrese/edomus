@@ -27,7 +27,7 @@
     ;; if node is a child already, this is equiv to moving the child
     (let [pos (child-pos base ref-node)]
       (when-not (< (child-pos base node) 0)
-        (new js/Error "The node to be inserted is a child of this node already."))
+        (new js/Error "The node to be inserted is a child of this node already.")) ;; not sure; do an implicit move then?
       (cond
         (< pos 0)
         (throw (new js/Error "The node before which the new node is to be inserted is not a child of this node."))

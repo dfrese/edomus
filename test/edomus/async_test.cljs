@@ -1,6 +1,7 @@
 (ns edomus.async-test
   (:require [cljs.test :refer-macros [deftest is testing async]]
             [edomus.async :as async]
+            [edomus.core :as core]
             [edomus.test-commands :as tc]))
 
 (defn exec! [f & args]
@@ -26,3 +27,29 @@
 
 (deftest async-classes-test
   (tc/classes-test exec!))
+
+(deftest async-children-test2
+  (exec! (fn []
+           (let [e1 (core/create-element core/document "div")
+                 e2 (core/create-element core/document "span")
+                 e3 (core/create-element core/document "span")
+                 e4 (core/create-element core/document "span")]
+
+             (core/append-child! e1 e2)
+             (is (= [e2] (core/child-nodes e1)))
+             (async/flush!)
+             (is (= [e2] (core/child-nodes e1)))
+
+             (core/remove-child! e1 e2)
+             (is (= [] (core/child-nodes e1)))
+             (async/flush!)
+             (is (= [] (core/child-nodes e1)))
+
+             (core/append-child! e1 e2)
+             (core/insert-before! e1 e3 e2)
+             (core/insert-before! e1 e4 e3)
+             (is (= [e4 e3 e2] (core/child-nodes e1)))
+             (async/flush!)
+             (is (= [e4 e3 e2] (core/child-nodes e1)))
+             
+             ))))

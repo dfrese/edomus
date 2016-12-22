@@ -129,7 +129,7 @@
   (fn [& args]
     (let [st0 @state
           [r st1] (apply f @state args)]
-      (assert (identical? @state st0) "Interleaved modification not allowed.")
+      (assert (identical? @state st0) "Interleaved modification not allowed.") ;; not possible unless we add smth that take a fn.
       (when (not (identical? st0 st1))
         (reset! state st1))
       r)))
@@ -147,7 +147,7 @@
   (let [batch current-batch]
     (binding [flush! (state-m batch do-flush!)
               ;; TODO: post-commit-hook
-              ;; TODO: focus?
+              ;; TODO: core/focus! async-focus!
               core/document js/document
               core/element-owner-document #(.-ownerDocument %)
               core/create-element create/element
@@ -181,7 +181,7 @@
               core/remove-class! (state-m batch remove-class!)
               core/toggle-class! (state-m batch toggle-class!)
               core/add-event-listener! sync/sync-add-event-listener!
-            core/remove-event-listener! sync/sync-remove-event-listener!]
+              core/remove-event-listener! sync/sync-remove-event-listener!]
       (let [res (apply f args)]
         (aframe/request-frame! commit-current-batch!)
         res))))

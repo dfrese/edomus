@@ -60,7 +60,7 @@
 (c/defcmd remove-class! [element name] "Removes the given css class from the set of classes of the given element.")
 (c/defcmd toggle-class! [element name] "Adds or removes the given css class from the set of classes of the given element, depending on weather the class is contained or not.")
 
-;; TODO? (c/defcmd focus [element])
+(c/defcmd focus! [element] "Set the focus on the given element, if it can be focused. Requires that the element is actually attached to the document.")
 
 (c/defcmd add-event-listener! [element type listener & [options]] "Adds an event listener function for the given event type on the given element. Possible boolean options are `:capture`, `:once` and `:passive`.")
 (c/defcmd remove-event-listener! [element type listener & [options]] "Removes an event listener previously registered with [[add-event-listener!]. Possible boolean options are `:capture` and `:passive`.")
