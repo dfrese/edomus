@@ -14,6 +14,7 @@
 (c/defcmd element-name [e] "Returns the name or type of an element. For html elements, this is the upper-cased tag name.")
 (c/defcmd element-namespace [e] "Returns the xml namespace of an element.")
 (c/defcmd element-owner-document [e] "Returns the document that was passed to the create function that returned the given element.")
+
 (c/defcmd create-text-node [document value] "Create a text node in the given document and with the given content.")
 (c/defcmd text-node? [v] "Returns true for the text nodes returned by [[create-text-node]].")
 (c/defcmd text-node-value [v] "Returns the content of the given text node.")
@@ -48,7 +49,7 @@
 (c/defcmd set-style! [element name value] "Sets the given css style for the given element. Setting it to \"\" is equivalent to removing it. Note the value may be an [[important]] value.")
 (c/defcmd remove-style! [element name] "Remove the given css style for the given element.")
 
-(c/defcmd child-nodes [element] "Returns a vector of the current child nodes of the given element.")
+(c/defcmd child-nodes [element] "Returns a persistent vector of the current child nodes of the given element.")
 (c/defcmd append-child! [element node] "Appends the given node to the end of the child nodes of the given element.")
 (c/defcmd remove-child! [element node] "Remove the given node from the child nodes of the given element. Raises an error if the node is not a child of that element.")
 (c/defcmd insert-before! [element node ref] "Insert the given node before the given reference node within the children of the given element. Throws if `ref` is not a child of that element.")
@@ -60,7 +61,37 @@
 (c/defcmd remove-class! [element name] "Removes the given css class from the set of classes of the given element.")
 (c/defcmd toggle-class! [element name] "Adds or removes the given css class from the set of classes of the given element, depending on weather the class is contained or not.")
 
-(c/defcmd focus! [element] "Set the focus on the given element, if it can be focused. Requires that the element is actually attached to the document.")
-
 (c/defcmd add-event-listener! [element type listener & [options]] "Adds an event listener function for the given event type on the given element. Possible boolean options are `:capture`, `:once` and `:passive`.")
 (c/defcmd remove-event-listener! [element type listener & [options]] "Removes an event listener previously registered with [[add-event-listener!]. Possible boolean options are `:capture` and `:passive`.")
+;; TODO?: dispatch-event! create event, custom event?
+
+(c/defcmd at-next-animation-frame! [f & args])
+(c/defcmd cancel-animation-frame! [id])
+
+;; The following should be done in an animation frame: (force a reflow)
+
+(c/defcmd focus! [element] "Set the focus on the given element, if it can be focused. Requires that the element is actually attached to the document.")
+(c/defcmd blur! [element] "Remove the focus from the given element, if it can be focused. Requires that the element is actually attached to the document.")
+
+;; These properties force a reflow:
+;; elem.offsetLeft, elem.offsetTop, elem.offsetWidth, elem.offsetHeight, elem.offsetParent
+;; elem.clientLeft, elem.clientTop, elem.clientWidth, elem.clientHeight
+
+;; elem.getClientRects() - non standard
+;; elem.getBoundingClientRect() - TODO?
+
+;; TODO?:
+;; elem.scrollBy(), elem.scrollTo()
+;; elem.scrollIntoView(), elem.scrollIntoViewIfNeeded()
+
+;; These properties force a reflow:
+
+;; elem.scrollWidth, elem.scrollHeight
+;; elem.scrollLeft, elem.scrollTop also, setting them
+
+;; window.scrollX, window.scrollY
+;; window.innerHeight, window.innerWidth
+
+;; TODO:?
+;; inputElem.select()
+;; doc.scrollingElement

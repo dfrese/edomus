@@ -5,8 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.8.0" :scope "provided"]
-                 [org.clojure/clojurescript "1.9.229" :scope "provided"]
-                 [active-clojure "0.13.0-SNAPSHOT"]]
+                 [org.clojure/clojurescript "1.9.229" :scope "provided"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-doo "0.1.7"]

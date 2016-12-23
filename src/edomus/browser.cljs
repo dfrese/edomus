@@ -1,9 +1,9 @@
-(ns edomus.sync
+(ns edomus.browser
+  "Defines the execution in the global browsing context."
   (:require [edomus.impl.create :as create]
             [edomus.impl.style :as style]
             [edomus.impl.attributes :as attributes]
-            [edomus.core :as core]
-            [active.clojure.monad :as monad]))
+            [edomus.core :as core]))
 
 (defn ^:no-doc element? [v]
   (instance? js/Element v))
@@ -82,11 +82,30 @@
 (defn- toggle-class! [element name]
   (.toggle (.-classList element) name))
 
-(defn- sync-add-event-listener! [element type listener & [options]]
+(defn- add-event-listener! [element type listener & [options]]
   (.addEventListener element type listener (clj->js options)))
 
-(defn- sync-remove-event-listener! [element type listener & [options]]
+(defn- remove-event-listener! [element type listener & [options]]
   (.removeEventListener element type listener (clj->js options)))
+
+(defn- focus! [element]
+  (.focus element))
+
+(defn- blur! [element]
+  (.blur element))
+
+;; TODO: any polyfill/cljs lib?
+(if (.-requestAnimationFrame js/window)
+  (do
+    (defn- at-next-animation-frame! [f & args]
+      (.requestAnimationFrame js/window #(apply f args)))
+    (defn- cancel-animation-frame! [id]
+      (.cancelAnimationFrame js/window id)))
+  (do
+    (defn- at-next-animation-frame! [f & args]
+      (.setTimeout js/window #(apply f args) 16)) ;; 60fps => 16ms = (/ 1000ms 60)
+    (defn- cancel-animation-frame! [id]
+      (.clearTimeout js/window id))))
 
 (defn execute [f & args]
   (binding [core/document js/document
@@ -121,6 +140,10 @@
             core/add-class! add-class!
             core/remove-class! remove-class!
             core/toggle-class! toggle-class!
-            core/add-event-listener! sync-add-event-listener!
-            core/remove-event-listener! sync-remove-event-listener!]
+            core/add-event-listener! add-event-listener!
+            core/remove-event-listener! remove-event-listener!
+            core/at-next-animation-frame! at-next-animation-frame!
+            core/cancel-animation-frame! cancel-animation-frame!
+            core/focus! focus!
+            core/blur! blur!]
     (apply f args)))
