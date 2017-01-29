@@ -1,4 +1,4 @@
-(ns edomus.impl.create)
+(ns dfrese.edomus.impl.create)
 
 (def ^{:private true
        :arglists '([element name])}

@@ -1,7 +1,7 @@
-(ns edomus.event
+(ns dfrese.edomus.event
   "Utils for more convenient event handler registration."
   (:require [clojure.string :as string]
-            [edomus.core :as core]))
+            [dfrese.edomus.core :as core]))
 
 ;; This heals (or circumvents) the fundamental flaw of DOM, that you
 ;; have to keep a reference of the function you added as a handler, to

@@ -1,5 +1,5 @@
-(ns edomus.mock
-  (:require [edomus.core :as core]))
+(ns dfrese.edomus.mock
+  (:require [dfrese.edomus.core :as core]))
 
 (defrecord ^:no-doc MockCall [call result])
 

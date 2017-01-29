@@ -1,4 +1,4 @@
-(ns edomus.impl.commands)
+(ns dfrese.edomus.impl.commands)
 
 #?(:clj
    (defmacro defcmd [name params & [docstring]]

@@ -1,6 +1,6 @@
-(ns edomus.core-test
+(ns dfrese.edomus.core-test
   (:require [cljs.test :refer-macros [deftest is testing]]
-            [edomus.core :as core]))
+            [dfrese.edomus.core :as core]))
 
 (deftest important-test
   (is (not= 42

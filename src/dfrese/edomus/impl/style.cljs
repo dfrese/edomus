@@ -1,5 +1,5 @@
-(ns edomus.impl.style
-  (:require [edomus.core :as core]))
+(ns dfrese.edomus.impl.style
+  (:require [dfrese.edomus.core :as core]))
 
 (defn set-style! [style k v]
   (if (core/important? v)

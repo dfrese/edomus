@@ -1,9 +1,9 @@
-(ns edomus.hiccup-test
+(ns dfrese.edomus.hiccup-test
   (:require #?(:cljs [cljs.test :refer-macros [deftest is testing]])
             #?(:clj [clojure.test :refer [deftest is testing]])
-            [edomus.core :as core]
-            [edomus.hiccup :as hiccup]
-            [edomus.test-commands :as tc]))
+            [dfrese.edomus.core :as core]
+            [dfrese.edomus.hiccup :as hiccup]
+            [dfrese.edomus.test-commands :as tc]))
 
 (defn exec! [f]
   (hiccup/execute f))

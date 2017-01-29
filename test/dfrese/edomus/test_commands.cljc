@@ -1,7 +1,7 @@
-(ns edomus.test-commands
+(ns dfrese.edomus.test-commands
   (:require #?(:cljs [cljs.test :refer-macros [deftest is testing]])
             #?(:clj [clojure.test :refer [deftest is testing]])
-            [edomus.core :as core]))
+            [dfrese.edomus.core :as core]))
 
 (defn create-test [exec!]
   (exec! (fn []

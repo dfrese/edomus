@@ -1,4 +1,4 @@
-(ns edomus.impl.attributes)
+(ns dfrese.edomus.impl.attributes)
 
 (defn remove-attribute [element k]
   (let [ks (name k)]

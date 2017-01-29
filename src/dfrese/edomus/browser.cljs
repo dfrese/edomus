@@ -1,9 +1,9 @@
-(ns edomus.browser
+(ns dfrese.edomus.browser
   "Defines the execution in the global browsing context."
-  (:require [edomus.impl.create :as create]
-            [edomus.impl.style :as style]
-            [edomus.impl.attributes :as attributes]
-            [edomus.core :as core]))
+  (:require [dfrese.edomus.impl.create :as create]
+            [dfrese.edomus.impl.style :as style]
+            [dfrese.edomus.impl.attributes :as attributes]
+            [dfrese.edomus.core :as core]))
 
 (defn ^:no-doc element? [v]
   (instance? js/Element v))

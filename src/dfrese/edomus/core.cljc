@@ -1,6 +1,6 @@
-(ns edomus.core
+(ns dfrese.edomus.core
   "TODO: explain commands/execution contexts."
-  (:require [edomus.impl.commands :as c :include-macros true]))
+  (:require [dfrese.edomus.impl.commands :as c :include-macros true]))
 
 (def html-ns "http://www.w3.org/1999/xhtml")
 

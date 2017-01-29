@@ -1,7 +1,7 @@
-(ns edomus.browser-test
+(ns dfrese.edomus.browser-test
   (:require [cljs.test :refer-macros [deftest is testing]]
-            [edomus.test-commands :as tc]
-            [edomus.browser :as browser]))
+            [dfrese.edomus.test-commands :as tc]
+            [dfrese.edomus.browser :as browser]))
 
 (def exec! browser/execute)
 

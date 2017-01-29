@@ -1,4 +1,4 @@
-(defproject de.active-group/edomus "0.1.0-SNAPSHOT"
+(defproject dfrese/edomus "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -17,11 +17,11 @@
              :compiler {:output-to "target/test.js"
                         :output-dir "target"
                         :optimizations :none
-                        :main edomus.runner}}}}
+                        :main dfrese.edomus.runner}}}}
 
   :doo {:build "test"}
 
   :codox {:language :clojurescript
           :metadata {:doc/format :markdown}
-          :namespaces [#"^edomus\.(?!impl)"]}
+          :namespaces [#"^dfrese.edomus\.(?!impl)"]}
   )

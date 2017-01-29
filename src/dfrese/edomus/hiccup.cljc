@@ -1,7 +1,7 @@
-(ns edomus.hiccup
-  (:require #?(:clj [edomus.impl.commands :as cmd])
-            #?(:cljs [edomus.impl.commands :as cmd :include-macros true])
-            [edomus.core :as core]
+(ns dfrese.edomus.hiccup
+  (:require #?(:clj [dfrese.edomus.impl.commands :as cmd])
+            #?(:cljs [dfrese.edomus.impl.commands :as cmd :include-macros true])
+            [dfrese.edomus.core :as core]
             [clojure.set :as set]
             [clojure.string :as string]))
 

@@ -1,7 +1,7 @@
-(ns edomus.impl.batch
-  (:require [edomus.impl.style :as style]
-            [edomus.impl.children :as children]
-            [edomus.impl.attributes :as attributes]))
+(ns dfrese.edomus.impl.batch
+  (:require [dfrese.edomus.impl.style :as style]
+            [dfrese.edomus.impl.children :as children]
+            [dfrese.edomus.impl.attributes :as attributes]))
 
 (def empty-batch {})
 
