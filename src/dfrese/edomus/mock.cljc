@@ -1,13 +1,29 @@
 (ns dfrese.edomus.mock
+  "Defines the execution in a simulated context, where the order of
+  calls are explicitly asserted."
   (:require [dfrese.edomus.core :as core]))
 
 (defrecord ^:no-doc MockCall [call result])
 
-#?(:clj
-   (defmacro mock [form & [result]]
-     `(MockCall. [~@form] ~result)))
+(defn mock* [call result]
+  (MockCall. (vec call) result))
 
-(defn execute [mock-seq f & args]
+#?(:clj
+   (defmacro mock "Specifies an element of a mock sequence, that
+  expects a call of a dom function with concrete arguments, and the
+  result that should be used instead. Example:
+
+    (mock (core/create-element core/document \"div\") :elem-1)"
+     [form & [result]]
+     `(mock* [~@form] ~result)))
+
+(def document nil)
+
+(defn execute
+  "Runs `(apply f args)` in a context, where there are assertions that
+  the core functions are called in the order specified in the given
+  `mock-seq`."
+  [mock-seq f & args]
   (let [cmds (set (map first mock-seq))]
     (let [rem (atom mock-seq)
           m (fn [cmd]

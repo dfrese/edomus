@@ -42,7 +42,7 @@
 
              (core/remove-property! e1 "foobar")
              (is (not (core/has-property? e1 "foobar")))
-             (is (= nil (core/get-property e1 "foobar")))))))
+             (is (= core/undefined (core/get-property e1 "foobar")))))))
 
 (defn attribute-test [exec!]
   (exec! (fn []

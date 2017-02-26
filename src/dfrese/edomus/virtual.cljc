@@ -1,66 +1,35 @@
-(ns dfrese.edomus.hiccup
+(ns dfrese.edomus.virtual
+  "Defines a virtual execution context. An extension allows to get a hiccup representations of elements."
   (:require #?(:clj [dfrese.edomus.impl.commands :as cmd])
             #?(:cljs [dfrese.edomus.impl.commands :as cmd :include-macros true])
             [dfrese.edomus.core :as core]
-            [clojure.set :as set]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [dfrese.edomus.impl.html5 :as html5]))
 
-;; Need to have unique objects, to store their props in a map, and to reference them as children.
+;; Need to have objects with identity, to store their props in a map, and to reference them as children.
 (deftype ^:no-doc Element [ns name is]
          ;;#?@(:cljs [Object (toString [this] (str "#element{" (.-name this) "}"))])
          )
 (deftype ^:no-doc Text [])
 
-;; (cmd/defcmd to-html [element])
-(cmd/defcmd to-hiccup [element])
-
-(def ^:private default-element-props {"attributes" {}
-                                      "className" ""
-                                      "classList" #{}
-                                      "style" (array-map)
-                                      "childNodes" []
-                                      "accessKey" ""
-                                      "tabIndex" -1
-                                      "dir" ""
-                                      "id" ""
-                                      "lang" ""
-                                      "title" ""})
-
-(defn- parse-class [s]
-  (map string/trim (string/split s #"\s+")))
-
-(defn- add-classes [s set]
-  (apply str (interpose " " (set/union (parse-class s) set))))
-
-(defn- make-style [m]
-  (apply str (interpose "; " (map (fn [[k v]]
-                                    (str (name k) ": " v))
-                                  (remove #(empty? (second %)) m)))))
+(cmd/defcmd to-hiccup
+  [element]
+  "Returns a hiccup representation of the given
+  dom element. Note that hiccup represents HTML, which does not fully
+  cover the DOM API. This assumes that the hiccup representation is
+  later used to render a HTML5 document.")
 
 (defn- compile-to-hiccup [elements element]
-
   (cond
     (instance? Element element)
     (let [props (get elements element)
+          tag (.-name element)
+          ns (.-ns element)
           attrs (reduce-kv (fn [m k v]
-                             (if (= v (get default-element-props k))
-                               m
-                               (case k
-                                 "attributes" (reduce-kv (fn [m k v]
-                                                           (assoc m (keyword k) v))
-                                                         m v)
-                                 "className" (update m :class add-classes (parse-class v))
-                                 "classList" (update m :class add-classes v)
-                                 "childNodes" m ;; handled below
-                                 "style" (assoc m :style (make-style v))
-                                 "accessKey" (assoc m :accesskey v)
-                                 "tabIndex" (assoc m :tabindex v)
-                                 "dir" (assoc m :dir v)
-                                 "id" (assoc m :id v)
-                                 "lang" (assoc m :lang v)
-                                 "title" (assoc m :title v)
-                                 m ;; Arbitrary properties cannot be set, methinks
-                                 )))
+                             (case k
+                               "childNodes" m ;; handled below
+                               (html5/add-property m tag ns k v))
+                             )
                            (cond-> {}
                              (.-is element) (assoc :is (.-is element)))
                            props)]
@@ -81,9 +50,12 @@
                       (string/upper-case name)
                       name)
                     (:is options))]
-    [e (assoc elements e default-element-props)]))
+    [e (assoc elements e html5/default-element-props)]))
 
-(defn execute [f & args]
+(defn execute
+  "Runs `(apply f args)` in a context, where the core functions are
+  implemented against a virtual in-memory dom."
+  [f & args]
   (let [sta (atom empty-state)
         state-m (fn [f]
                   (fn [& args]
@@ -260,3 +232,9 @@
          ]
       (apply f args))))
 
+#_(defn with-new-document
+  [f & args]
+  (execute (fn []
+             (let [doc core/document
+                   body (core/create-element doc "body")]
+               (to-hiccup (apply f args))))))

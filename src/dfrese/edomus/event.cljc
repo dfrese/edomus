@@ -1,5 +1,5 @@
 (ns dfrese.edomus.event
-  "Utils for more convenient event handler registration."
+  "Utilities for more convenient event handler registration."
   (:require [clojure.string :as string]
             [dfrese.edomus.core :as core]))
 
@@ -8,7 +8,7 @@
 ;; be able to remove it again - instead of returning or accepting an id.
 
 (defn event-type
-  "Specify and event type by it's name (e.g. \"click\"), and the
+  "Returns and event type by it's name (e.g. \"click\"), and the
   capturing phase of event handling that is to be handled."
   ([type] (if (vector? type)
             type
@@ -39,16 +39,44 @@
                       (dissoc m type))
                     m))))
 
-(defn set-event-handler!
-  "Set the singleton event listener for an event type and element."
-  ;; TODO: also support options :once and :passive? (not relevant for unset)
-  [element type f & args]
+(defn set-event-handler*!
+  "Set the singleton event listener for an event type and
+  element. Options may include booleans for the keys `:once?` and
+  `:passive?`."
+  [element type options f & args]
   (unset-event-handler! element type)
   (let [type (event-type type) ;; lift pure strings
-        h (if (empty? args)
-            f
-            (fn [e]
-              (apply f e args)))]
-    (update-data! element
-                  assoc type h)
-    (core/add-event-listener! element (first type) h {:capture (second type)})))
+        h (cond
+            (empty? args) f
+            :else (fn [e]
+                    (apply f e args)))]
+    (when-not (:once? options)
+      (update-data! element
+                    assoc type h))
+    (core/add-event-listener! element (first type) h {:capture (second type)
+                                                      :passive (:passive? options)
+                                                      :once (:once? options)})))
+
+(defn set-event-handler!
+  "Set the singleton event listener for an event type and element."
+  [element type f & args]
+  (apply set-event-handler*! element type {} f args))
+
+(comment
+  (defn set-passive-event-handler!
+  "Set the singleton event listener for an event type and element."
+  [element type f & args]
+  (apply set-event-handler*! element type {:passive? true} f args))
+
+(defn handle-next-event!
+  [element type f & args]
+  (let [type (event-type type)] ;; lift pure strings
+    (core/add-event-listener! element (first type) h {:capture (second type)
+                                                      :once true})))
+
+(defn handle-next-event-passive!
+  [element type f & args]
+  (let [type (event-type type)] ;; lift pure strings
+    (core/add-event-listener! element (first type) h {:capture (second type)
+                                                      :passive true
+                                                      :once true}))))

@@ -1,8 +1,11 @@
 (ns dfrese.edomus.core
-  "TODO: explain commands/execution contexts."
+  "Defines the functions of the DOM API. Note that you can develop
+  against this API, but in order to actually execute that code, you
+  have to choose an implementation by calling one of the `execute`
+  functions from the other namespaces."
   (:require [dfrese.edomus.impl.commands :as c :include-macros true]))
 
-(def html-ns "http://www.w3.org/1999/xhtml")
+(def ^{:doc "The html namespace - \"http://www.w3.org/1999/xhtml\"."} html-ns "http://www.w3.org/1999/xhtml")
 
 (def ^{:dynamic true
        :doc "The global dom document, which can be passed to node creation functions."}
@@ -21,7 +24,10 @@
 (c/defcmd set-text-node-value! [node v] "Changes the content of the given text node.")
 
 #?(:cljs (def undefined js/undefined))
-#?(:clj (def undefined ::undefined))
+#?(:clj (def undefined nil)) ;; Note: js/undefined is false on cljs; so proper replacement is not easy.
+
+(defn undefined? [v]
+  (= v undefined))
 
 (c/defcmd has-property? [element name] "Returns true if the given property is set on the given element.")
 (c/defcmd get-property [element name] "Returns the value of the given property on the given element. Returns [[undefined]] if the element does not have that property set.")

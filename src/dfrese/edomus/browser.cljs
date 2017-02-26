@@ -1,5 +1,5 @@
 (ns dfrese.edomus.browser
-  "Defines the execution in the global browsing context."
+  "Defines the execution in the browser/JavaScript context."
   (:require [dfrese.edomus.impl.create :as create]
             [dfrese.edomus.impl.style :as style]
             [dfrese.edomus.impl.attributes :as attributes]
@@ -107,7 +107,10 @@
     (defn- cancel-animation-frame! [id]
       (.clearTimeout js/window id))))
 
-(defn execute [f & args]
+(defn execute
+  "Runs `(apply f args)` in a context, where the core functions are
+  implemented via the browsers native DOM."
+  [f & args]
   (binding [core/document js/document
             core/element-owner-document #(.-ownerDocument %)
             core/create-element create/element
