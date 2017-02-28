@@ -3,19 +3,13 @@
   (:require [dfrese.edomus.impl.create :as create]
             [dfrese.edomus.impl.style :as style]
             [dfrese.edomus.impl.attributes :as attributes]
-            [dfrese.edomus.core :as core]))
-
-(defn ^:no-doc element? [v]
-  (instance? js/Element v))
+            [dfrese.edomus.ext :as ext]))
 
 (defn ^:no-doc element-name [e]
   (.-nodeName e))
 
 (defn ^:no-doc element-namespace [e]
   (.-namespaceURI e))
-
-(defn ^:no-doc text-node? [v]
-  (instance? js/Text v))
 
 (defn ^:no-doc text-node-value [n]
   (.-nodeValue n))
@@ -107,46 +101,63 @@
     (defn- cancel-animation-frame! [id]
       (.clearTimeout js/window id))))
 
-(defn execute
-  "Runs `(apply f args)` in a context, where the core functions are
-  implemented via the browsers native DOM."
-  [f & args]
-  (binding [core/document js/document
-            core/element-owner-document #(.-ownerDocument %)
-            core/create-element create/element
-            core/create-element-ns create/element-ns
-            core/element? element?
-            core/element-name element-name
-            core/element-namespace element-namespace
-            core/create-text-node create/text-node
-            core/text-node? text-node?
-            core/text-node-value text-node-value
-            core/set-text-node-value! set-text-node-value!
-            core/has-property? has-property?
-            core/get-property get-property
-            core/set-property! set-property!
-            core/remove-property! remove-property!
-            core/has-attribute? attributes/has-attribute?
-            core/get-attribute attributes/get-attribute
-            core/set-attribute! set-attribute!
-            core/remove-attribute! remove-attribute!
-            core/get-style get-style
-            core/set-style! set-style!
-            core/remove-style! remove-style!
-            core/child-nodes child-nodes
-            core/append-child! append-child!
-            core/remove-child! remove-child!
-            core/insert-before! insert-before!
-            core/replace-child! replace-child!
-            core/classes classes
-            core/contains-class? contains-class?
-            core/add-class! add-class!
-            core/remove-class! remove-class!
-            core/toggle-class! toggle-class!
-            core/add-event-listener! add-event-listener!
-            core/remove-event-listener! remove-event-listener!
-            core/at-next-animation-frame! at-next-animation-frame!
-            core/cancel-animation-frame! cancel-animation-frame!
-            core/focus! focus!
-            core/blur! blur!]
-    (apply f args)))
+(extend-type js/Document
+  ext/IDocument
+  (-create-element-node-ns [this ns name options]
+    (if (nil? ns)
+      (create/element this name options)
+      (create/element-ns this ns name options)))
+  (-create-text-node [this value]
+    (create/text-node this value))
+
+  (-at-next-animation-frame! [document f args]
+    (apply at-next-animation-frame! f args))
+  (-cancel-animation-frame! [document id]
+    (cancel-animation-frame! id)))
+
+(extend-type js/Element
+  ext/IElement
+  (-element-name [this] (element-name this))
+  (-element-namespace [this] (element-namespace this))
+  (-element-owner-document [this] (.-ownerDocument this))
+  
+  (-element-has-property? [this name] (has-property? this name))
+  (-element-get-property [this name] (get-property this name))
+  (-element-set-property! [this name value] (set-property! this name value))
+  (-element-remove-property [this name] (remove-property! this name))
+
+  (-element-has-attribute? [this name] (attributes/has-attribute? this name))
+  (-element-get-attribute [this name] (attributes/get-attribute this name))
+  (-element-set-attribute! [this name value] (set-attribute! this name value))
+  (-element-remove-attribute! [this name] (remove-attribute! this name))
+
+  (-element-get-style [this name] (get-style this name))
+  (-element-set-style! [this name value] (set-style! this name value))
+  (-element-remove-style! [this name] (remove-style! this name))
+
+  (-element-child-nodes [this] (child-nodes this))
+  (-element-append-child! [this node] (append-child! this node))
+  (-element-remove-child! [this node] (remove-child! this node))
+  (-element-insert-before! [this node ref] (insert-before! this node ref))
+  (-element-replace-child! [this node old-node] (replace-child! this node old-node))
+
+  (-element-classes [this] (classes this))
+  (-element-contains-class? [this name] (contains-class? this name))
+  (-element-add-class! [this name] (add-class! this name))
+  (-element-remove-class! [this name] (remove-class! this name))
+  (-element-toggle-class! [this name] (toggle-class! this name))
+
+  (-element-add-event-listener! [this type listener options]
+    (add-event-listener! this type listener options))
+  (-element-remove-event-listener! [this type listener options]
+    (remove-event-listener! this type listener options))
+
+  (-element-focus! [this] (focus! this))
+  (-element-blur! [this] (blur! this)))
+
+(extend-type js/Text
+  ext/ITextNode
+  (-text-node-value [this] (text-node-value this))
+  (-set-text-node-value! [this value] (set-text-node-value! this value)))
+
+(def document js/document)

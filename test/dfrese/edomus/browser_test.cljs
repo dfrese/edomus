@@ -3,22 +3,20 @@
             [dfrese.edomus.test-commands :as tc]
             [dfrese.edomus.browser :as browser]))
 
-(def exec! browser/execute)
-
 (deftest sync-create-test
-  (tc/create-test exec!))
+  (tc/create-test browser/document))
 
 (deftest sync-property-test
-  (tc/property-test exec!))
+  (tc/property-test browser/document))
 
 (deftest sync-attribute-test
-  (tc/attribute-test exec!))
+  (tc/attribute-test browser/document))
 
 (deftest sync-style-test
-  (tc/style-test exec!))
+  (tc/style-test browser/document))
 
 (deftest sync-children-test
-  (tc/children-test exec!))
+  (tc/children-test browser/document))
 
 (deftest sync-classes-test
-  (tc/classes-test exec!))
+  (tc/classes-test browser/document))

@@ -1,10 +1,9 @@
 (defproject dfrese/edomus "0.1.0-SNAPSHOT"
-  :description "Edomus is a functional and more clojure-like DOM API.
+  :description "Edomus is a simplified, functional and more clojure-like DOM API.
 
-  It includes multiple implementations of this API: one
-  against the native browser DOM, one (non-visual) idependant clojure
-  implementation, and one mocking implementation for testing
-  imperative code."
+  It includes two implementations of this API: one
+  against the native browser DOM and one (non-visual) idependant clojure
+  implementation."
   ;;:url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
