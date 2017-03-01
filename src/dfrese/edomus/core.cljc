@@ -138,21 +138,28 @@
 (defn append-child!
   "Appends the given node to the end of the child nodes of the given element."
   [element node]
+  (assert (not (contains? (set (child-nodes element)) node)) "Node not must be a child of the element.") ;; and not of any other; harder to test though.
   (ext/-element-append-child! element node))
 
 (defn remove-child!
   "Remove the given node from the child nodes of the given element. Raises an error if the node is not a child of that element."
   [element node]
+  (assert (contains? (set (child-nodes element)) node) "Node must be a child of the element.")
   (ext/-element-remove-child! element node))
 
 (defn insert-before!
   "Insert the given node before the given reference node within the children of the given element. Throws if `ref` is not a child of that element."
   [element node ref]
+  (assert (some? ref) "Referenced not must not be nil. Use append-child! to append a child.")
+  (assert (contains? (set (child-nodes element)) ref) "Referenced node must be a child of the element.")
+  (assert (not (contains? (set (child-nodes element)) node)) "Inserted node must not be a child of the element.") ;; and not of any other; harder to test though.
   (ext/-element-insert-before! element node ref))
 
 (defn replace-child!
   "Replace `old-node` with `node` within the children of the given element. Raises an error if `old-node` is not a child of that element."
   [element node old-node]
+  (assert (contains? (set (child-nodes element)) old-node) "Previous node must be a child of the element.")
+  (assert (not (contains? (set (child-nodes element)) node)) "Inserted node must not be a child of the element.") ;; and not of any other; harder to test though.
   (ext/-element-replace-child! element node old-node))
 
 (defn classes

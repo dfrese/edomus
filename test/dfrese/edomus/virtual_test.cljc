@@ -24,21 +24,21 @@
     (is (= [:div [:span "Hello"]]
            (v/to-hiccup y)))))
 
-(deftest hiccup-create-test
+(deftest virtual-create-test
   (tc/create-test document))
 
-(deftest hiccup-property-test
+(deftest virtual-property-test
   (tc/property-test document))
 
-(deftest hiccup-attribute-test
+(deftest virtual-attribute-test
   (tc/attribute-test document))
 
 ;; cannot work the same, unless we have some general CSS library?!
-#_(deftest hiccup-style-test
+#_(deftest virtual-style-test
   (tc/style-test document))
 
-(deftest hiccup-children-test
+(deftest virtual-children-test
   (tc/children-test document))
 
-(deftest hiccup-classes-test
+(deftest virtual-classes-test
   (tc/classes-test document))

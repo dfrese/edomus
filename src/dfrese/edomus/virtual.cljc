@@ -54,16 +54,23 @@
   (-element-remove-child! [this node]
     ;; TODO: throw if node is not a child
     (core/set-property! this "childNodes"
-                        (remove #(identical? node %) (core/get-property this "childNodes"))))
+                        (persistent! (reduce (fn [r n]
+                                               (if (identical? node n)
+                                                 r
+                                                 (conj! r n)))
+                                             (transient [])
+                                             (core/get-property this "childNodes")))))
   (-element-insert-before! [this node ref]
     ;; TODO: make it an exn
     #_(assert (some #(identical? ref %) (get-in elements [element "childNodes"]))
               (str "Reference node " ref " not in children: " (get-in elements [element "childNodes"])))
     (core/set-property! this "childNodes"
-                        (vec (mapcat #(if (identical? ref %)
-                                        [node ref]
-                                        [ref])
-                                     (core/get-property this "childNodes")))))
+                        (persistent! (reduce (fn [r n]
+                                               (if (identical? ref n)
+                                                 (conj! (conj! r node) n)
+                                                 (conj! r n)))
+                                             (transient [])
+                                             (core/get-property this "childNodes")))))
   (-element-replace-child! [this node old-node]
     ;; TODO: make it an exn
     #_(assert (some #(identical? old-node %) (get-in elements [element "childNodes"]))

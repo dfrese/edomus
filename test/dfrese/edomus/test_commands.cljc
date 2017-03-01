@@ -89,16 +89,29 @@
     (core/append-child! e1 e2)
     (is (= [e2] (core/child-nodes e1)))
 
+    (core/append-child! e1 e3)
+    (is (= [e2 e3] (core/child-nodes e1)))
+    (core/remove-child! e1 e3)
+
     (core/remove-child! e1 e2)
     (is (empty? (core/child-nodes e1)))
 
     (core/append-child! e1 e2)
     (core/insert-before! e1 e3 e2)
     (is (= [e3 e2] (core/child-nodes e1)))
+    
+    (core/insert-before! e1 e4 e2)
+    (is (= [e3 e4 e2] (core/child-nodes e1)))
+    (core/remove-child! e1 e4)
+    (is (= [e3 e2] (core/child-nodes e1)))
 
     (core/replace-child! e1 e4 e3)
-    ;; [e4 e3] in hiccup??? no clue why
-    (is (= [e4 e2] (core/child-nodes e1)))))
+    (is (= [e4 e2] (core/child-nodes e1)))
+
+    (core/replace-child! e1 e3 e2)
+    (is (= [e4 e3] (core/child-nodes e1)))
+
+    ))
 
 (defn classes-test [document]
   (let [e1 (core/create-element document "div")]
