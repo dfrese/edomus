@@ -97,9 +97,13 @@
                          (core/get-property this "classList"))))
 
   (-element-add-event-listener! [this type listener options]
-    (throw (ex-info "Not implemented yet." {})))
+    ;; (throw (ex-info "Not implemented yet." {}))
+    nil ;; need to ignore to render static view on server (make it an option to remove them?!)
+    )
   (-element-remove-event-listener! [this type listener options]
-    (throw (ex-info "Not implemented yet." {})))
+    ;;(throw (ex-info "Not implemented yet." {}))
+    nil
+    )
 
   (-element-focus! [this]
     (throw (ex-info "Not implemented yet." {})))
