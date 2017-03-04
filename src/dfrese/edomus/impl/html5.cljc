@@ -13,7 +13,14 @@
                             "dir" ""
                             "id" ""
                             "lang" ""
-                            "title" ""})
+                            "title" ""
+                            "htmlFor" "" ;; for all?? (TODO?)
+                            "type" "" ;; for all??
+                            "checked" false
+                            "value" ""
+                            "placeholder" ""
+                            "autofocus" false
+                            })
 
 (defn- parse-class [s]
   (if (some? s)
@@ -54,6 +61,12 @@
         "lang" (assoc m :lang v)
         "title" (assoc m :title v)
         "align" (assoc m :align v)
+        "htmlFor" (assoc m :for v)
+        "type" (assoc m :type v)
+        "checked" (assoc m :checked (boolean v))
+        "value" (assoc m :value v)
+        "placeholder" (assoc m :placeholder v)
+        "autofocus" (assoc m :autofocus (boolean v))
         m ;; Arbitrary properties cannot be set, methinks
         ))))
 
