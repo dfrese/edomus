@@ -60,8 +60,8 @@
 #?(:cljs (def undefined js/undefined))
 #?(:clj (def undefined nil)) ;; Note: js/undefined is false on cljs; so proper replacement is not easy.
 
-(defn undefined? [v] ;; TODO: replaces clojure/undefined?
-  (= v undefined))
+#?(:clj (defn undefined? [v] ;; already defined in cljs
+          (= v undefined)))
 
 (defn has-property?
   "Returns true if the given property is set on the given element."
@@ -112,7 +112,7 @@
 
 (defn important-value "Returns the base value of an [[important]] css style value, or `v` itself if is is not marked as important." [v]
   (if (important? v)
-    (.-v v)
+    (:v v)
     v))
 
 (defn get-style
