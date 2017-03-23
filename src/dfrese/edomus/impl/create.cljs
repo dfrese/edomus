@@ -12,10 +12,10 @@
                nil))))
 
 (defn element [document type & [options]]
-  (.createElement document type (create-options options)))
+  (.createElement document type (when options (create-options options))))
 
 (defn element-ns [document ns name & [options]]
-  (.createElementNS document ns name (create-options options)))
+  (.createElementNS document ns name (when options (create-options options))))
    
 (defn text-node [document text]
   (.createTextNode document text))
