@@ -135,6 +135,19 @@
   [element]
   (ext/-element-child-nodes element))
 
+(defn child-nodes-count
+  "Returns the number of child nodes the given element currently has."
+  [element]
+  (ext/-element-child-nodes-count element))
+
+(defn get-child [element n]
+  (ext/-element-get-child element n))
+
+(defn clear-child-nodes!
+  "Removes all children of the given element."
+  [element]
+  (ext/-element-clear-child-nodes! element))
+
 (defn append-child!
   "Appends the given node to the end of the child nodes of the given element."
   [element node]
@@ -176,6 +189,12 @@
   "Adds the given css class to the set of classes of the given element."
   [element name]
   (ext/-element-add-class! element name))
+
+(defn set-classes!
+  "Set the class list of the given elemnt to the given set of class names."
+  [element v]
+  (doseq [c v]
+    (add-class! element v)))
 
 (defn remove-class!
   "Removes the given css class from the set of classes of the given element."

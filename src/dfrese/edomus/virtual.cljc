@@ -48,6 +48,12 @@
 
   (-element-child-nodes [this]
     (core/get-property this "childNodes"))
+  (-element-child-nodes-count [this]
+    (count (core/get-property this "childNodes")))
+  (-element-get-child [this n]
+    (get (core/get-property this "childNodes") n))
+  (-element-clear-child-nodes! [this]
+    (core/set-property! this "childNodes" []))
   (-element-append-child! [this node]
     (core/set-property! this "childNodes"
                         (conj (core/get-property this "childNodes") node)))

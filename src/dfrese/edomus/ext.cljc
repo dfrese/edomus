@@ -27,6 +27,9 @@
   (-element-remove-style! [this name])
 
   (-element-child-nodes [this])
+  (-element-child-nodes-count [this])
+  (-element-get-child [this n])
+  (-element-clear-child-nodes! [this])
   (-element-append-child! [this node])
   (-element-remove-child! [this node])
   (-element-insert-before! [this node ref])

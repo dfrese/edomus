@@ -47,8 +47,18 @@
   (style/remove-style! (.-style element) name))
 
 (defn- child-nodes [element]
-  (vec (array-seq (.-childNodes element))))
-    
+  (let [res (transient [])
+        cns (.-childNodes element)]
+    (dotimes [i (.-length cns)]
+      (conj! res (.item cns i)))
+    (persistent! res)))
+
+(defn- clear-child-nodes! [^js/Node element]
+  (loop []
+    (when-let [n (.-lastChild element)]
+      (.removeChild element n)
+      (recur))))
+
 (defn- append-child! [element node]
   (.appendChild element node))
     
@@ -136,6 +146,10 @@
   (-element-remove-style! [this name] (remove-style! this name))
 
   (-element-child-nodes [this] (child-nodes this))
+  (-element-child-nodes-count [^js/Node this] (.-length (.-childNodes this)))
+  (-element-get-child [^js/Node this n] (aget (.-childNodes this) n))
+  (-element-clear-child-nodes! [this] (clear-child-nodes! this))
+
   (-element-append-child! [this node] (append-child! this node))
   (-element-remove-child! [this node] (remove-child! this node))
   (-element-insert-before! [this node ref] (insert-before! this node ref))
