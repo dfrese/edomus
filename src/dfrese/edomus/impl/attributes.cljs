@@ -15,27 +15,20 @@
       (if (map? element)
         (assoc element ks v)
         (do
-          (if-let [a (.getNamedItem (.-attributes element) ks)]
-            (set! (.-value a) v)
-            (let [document (.-ownerDocument element)]
-              (.setNamedItem (.-attributes element)
-                             (let [a (.createAttribute document ks)]
-                               (set! (.-value a) v)
-                               a))))
+          (.setAttribute element ks v)
           element)))))
 
 (defn has-attribute? [element k]
   (let [ks (name k)]
     (if (map? element)
       (not= js/undefined (get element ks js/undefined))
-      (some? (.getNamedItem (.-attributes element) ks)))))
+      (.hasAttribute element ks))))
 
 (defn get-attribute [element k]
   (let [ks (name k)]
     (if (map? element)
       (get element ks)
-      (when-let [a (.getNamedItem (.-attributes element) ks)]
-        (.-value a)))))
+      (.getAttribute element ks))))
 
 (defn attribute-map [element]
   (persistent! (reduce (fn [r attr]
