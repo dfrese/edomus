@@ -3,6 +3,9 @@
 (defprotocol IDocument
   (-create-element-node-ns [this ns name options])
   (-create-text-node [this value])
+
+  (-create-event [this event init])
+  (-create-custom-event [this event init])
   
   (-at-next-animation-frame! [this f args])
   (-cancel-animation-frame! [this id]))
@@ -11,6 +14,8 @@
   (-element-name [this])
   (-element-namespace [this])
   (-element-owner-document [this])
+
+  (-dispatch-event! [this event])
   
   (-element-has-property? [this name])
   (-element-get-property [this name])

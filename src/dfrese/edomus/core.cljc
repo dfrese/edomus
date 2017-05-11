@@ -216,7 +216,18 @@
   [element type listener & [options]]
   (ext/-element-remove-event-listener! element type listener options))
 
-;; TODO?: dispatch-event! create event, custom event?
+;; Events
+
+(defn create-event [document event init]
+  (ext/-create-event document event init))
+
+(defn create-custom-event [document event init]
+  (ext/-create-custom-event document event init))
+
+(defn dispatch-event! [element event]
+  (ext/-dispatch-event! element event))
+
+;; Animation frames
 
 (defn at-next-animation-frame! [document f & args]
   (ext/-at-next-animation-frame! document f args))

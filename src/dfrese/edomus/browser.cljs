@@ -120,6 +120,11 @@
   (-create-text-node [this value]
     (create/text-node this value))
 
+  (-create-event [this event-name init]
+    (new js/Event event-name (clj->js init)))
+  (-create-custom-event [this event-name init]
+    (new js/CustomEvent event-name (clj->js init)))
+
   (-at-next-animation-frame! [document f args]
     (apply at-next-animation-frame! f args))
   (-cancel-animation-frame! [document id]
@@ -130,6 +135,8 @@
   (-element-name [this] (element-name this))
   (-element-namespace [this] (element-namespace this))
   (-element-owner-document [this] (.-ownerDocument this))
+
+  (-dispatch-event! [^js/Element this ^js/Event event] (.dispatchEvent this event))
   
   (-element-has-property? [this name] (has-property? this name))
   (-element-get-property [this name] (get-property this name))

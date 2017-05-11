@@ -156,7 +156,7 @@
   dom element. Note that hiccup represents HTML, which does not fully
   cover the DOM API. This assumes that the hiccup representation is
   later used to render a HTML5 document."
-  [element]
+  [^Element element]
   (cond
     (core/element? element)
     (let [props (.-properties element)
